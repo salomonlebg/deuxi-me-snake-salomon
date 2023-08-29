@@ -22,18 +22,25 @@ Pos_Y2=450
 dx2=50
 dy2=0
 
+Pos_X3=150
+Pos_Y3=450
 
-serp1 = canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+50,Pos_Y+50,fill='red')
+dx3=50
+dy3=0
+
+
+serp1 = canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+50,Pos_Y+50,fill='dark green')
 #taille de la tête, couleur etc
 serp2 = canvas.create_rectangle(Pos_X2,Pos_Y2,Pos_X2+50,Pos_Y2+50,fill='green')
 #corps
+serp3 = canvas.create_rectangle(Pos_X3,Pos_Y3,Pos_X3+50,Pos_Y3+50,fill='green')
 
 
 score = 0
 
 
 def deplacement():
-    global dx,dy
+    global dx,dy,dx2,dy2,dx3,dy3
     if canvas.coords(serp1)[2]>600:
         close()
     elif canvas.coords(serp1)[0]<0:
@@ -43,18 +50,15 @@ def deplacement():
     elif canvas.coords(serp1)[3]>600:
         close()
     canvas.move(serp1,dx,dy)
+    canvas.move(serp2,dx2,dy2)
+    canvas.move(serp3,dx3,dy3)
+    dx3=dx2
+    dy3=dy2
+    dx2=dx
+    dy2=dy
     tk.after(speed,deplacement)
  # si la tête touche le bord, le fenetre se ferme
 
-
-def deplacement2():
-    global dx2,dy2
-    if canvas.coords(serp2)[1]== canvas.coords(serp1)[3]:
-        dx2=0
-        dy2=-50
-    canvas.move(serp2,dx2,dy2)
-    tk.after(speed,deplacement2)
-#mouvement corps
    
 
 def droite(event):
@@ -99,7 +103,6 @@ canvas.bind_all('<Down>', bas)
 #binding des flèches du clavier
 
 deplacement()
-deplacement2()
 
 
 tk.mainloop()
