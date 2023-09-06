@@ -59,8 +59,16 @@ def deplacement():
     tk.after(speed,deplacement)
  # si la tête touche le bord, le fenetre se ferme
 
-   
+ma_liste = [0,50,100,150,200,250,300,350,400,450,500,550]
 
+def créer_pomme():
+    x = random.choice(ma_liste)
+    y = random.choice(ma_liste)
+    canvas.create_rectangle(x,y,x+50,y+50,fill='red')
+    return (x,y)
+
+
+   
 def droite(event):
     global dx,dy
     dx=50
@@ -103,6 +111,7 @@ canvas.bind_all('<Down>', bas)
 #binding des flèches du clavier
 
 deplacement()
+créer_pomme()
 
 
 tk.mainloop()
