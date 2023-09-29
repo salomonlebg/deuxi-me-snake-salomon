@@ -10,7 +10,7 @@ m = 50
 n = 12
 
 #x = [0,50,100,150,200,250,300,350,400,450,500,550,600]
-x =  range(0,n*m,50)
+x =  range(0,n*m,m)
 
 
 dx = [m,m,m]
@@ -27,25 +27,15 @@ canvas.pack(padx=10,pady=10)
 Pos_X=x[5]
 Pos_Y=x[9]
 
-#déplacement de la tête au début
-dx=x[1]
-dy=x[0]
 
 #position du prmier corps au début
 Pos_X2=x[4]
 Pos_Y2=x[9]
 
-#déplacement du premier corps au début
-dx2=x[1]
-dy2=x[0]
-
 #position du 2ieme corps au début
 Pos_X3=x[3]
 Pos_Y3=x[9]
 
-#déplacement du 2ieme corps au début
-dx3=x[1]
-dy3=x[0]
 
 #liste des rectangle du serpent
 serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+50,Pos_Y+50,fill='darkgreen'),
@@ -66,9 +56,9 @@ def deplacement():
     elif canvas.coords(serp[0])[3]>600:
         close()
     else :
-        canvas.move(serp[0],dx,dy)
-        canvas.move(serp[1],dx2,dy2)
-        canvas.move(serp[2],dx3,dy3)
+        canvas.move(serp[0],dx[0],dy[0])
+        canvas.move(serp[1],dx[1],dy[1])
+        canvas.move(serp[2],dx[2],dy[2])
         for k in range(len(dx)-1,0,-1):
             dx[k] = dx[k-1]
             dy[k] = dy[k-1]
@@ -98,23 +88,23 @@ def collision():
 # actions des flèches directionelles         
 def droite(event):
     global dx,dy
-    dx=m
-    dy=x[0]
+    dx[0]=x[1]
+    dy[0]=x[0]
 #mouvement a droite
 def gauche(event):
     global dx,dy
-    dx=-m
-    dy=x[0]
+    dx[0]=-m
+    dy[0]=x[0]
 #mouvement a gauche
 def haut(event):
     global dx,dy
-    dx=x[0]
-    dy=-m
+    dx[0]=x[0]
+    dy[0]=-m
 #mouvement en haut
 def bas(event):
     global dx,dy
-    dx=x[0]
-    dy=m
+    dx[0]=x[0]
+    dy[0]=x[1]
 #mouvement en bas
 
 
