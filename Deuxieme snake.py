@@ -28,25 +28,16 @@ Pos_X=x[5]
 Pos_Y=x[9]
 
 
-#position du prmier corps au début
-Pos_X2=x[4]
-Pos_Y2=x[9]
-
-#position du 2ieme corps au début
-Pos_X3=x[3]
-Pos_Y3=x[9]
-
-
 #liste des rectangle du serpent
-serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+50,Pos_Y+50,fill='darkgreen'),
-        canvas.create_rectangle(Pos_X2,Pos_Y2,Pos_X2+50,Pos_Y2+50,fill='green'),
-        canvas.create_rectangle(Pos_X3,Pos_Y3,Pos_X3+50,Pos_Y3+50,fill='green')]
+serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+m,Pos_Y+m,fill='darkgreen'),
+        canvas.create_rectangle(Pos_X-m,Pos_Y,Pos_X,Pos_Y+m,fill='green'),
+        canvas.create_rectangle(Pos_X-2*m,Pos_Y,Pos_X-m,Pos_Y+m,fill='green')]
 
 # détections si la tête touche le bord du canvas
 # déplacement de la tête + des corps
 # on vérifie les coordonées de la tête pour la collision
 def deplacement():
-    global dx,dy,dx2,dy2,dx3,dy3
+    global dx,dy
     if canvas.coords(serp[0])[2]>600:
         close()
     elif canvas.coords(serp[0])[0]<0:
@@ -56,9 +47,8 @@ def deplacement():
     elif canvas.coords(serp[0])[3]>600:
         close()
     else :
-        canvas.move(serp[0],dx[0],dy[0])
-        canvas.move(serp[1],dx[1],dy[1])
-        canvas.move(serp[2],dx[2],dy[2])
+        for k in range(0,len(dx)):
+            canvas.move(serp[k],dx[k],dy[k])
         for k in range(len(dx)-1,0,-1):
             dx[k] = dx[k-1]
             dy[k] = dy[k-1]
@@ -76,6 +66,8 @@ def créer_pomme():
 pomme1 = créer_pomme()
 
 
+c1,c2,c3,c4 = canvas.coords(serp[-1])
+
 # quand la tête touche la pomme
 def collision():
     global pomme1
@@ -84,6 +76,10 @@ def collision():
         canvas.delete(pomme1)
         pomme1 = créer_pomme()
         score = score + 1
+        serp.append(canvas.create_rectangle(c1-dx[-1],c2-dy[-1],c3-dx[-1],c4-dy[-1],fill="green"))
+        dx.append(dx[-1])
+        dy.append(dx[-1])
+        
 
 # actions des flèches directionelles         
 def droite(event):
