@@ -36,63 +36,80 @@ serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+tc,Pos_Y+tc,fill='darkgreen'),
         canvas.create_rectangle(Pos_X-tc,Pos_Y,Pos_X,Pos_Y+tc,fill='green'),
         canvas.create_rectangle(Pos_X-2*tc,Pos_Y,Pos_X-tc,Pos_Y+tc,fill='green')]
 
+
+
 # détections si la tête touche le bord du canvas
-# déplacement de la tête + des corps
-# on vérifie les coordonées de la tête pour la collision avec la pomme et le corps 
+# cg,ch,cd,cb = côté gauche, côté du haut, côté droite, côté du bas
 def deplacement():
     global dx,dy
-    if canvas.coords(serp[0])[2]>nc*tc:
+    global pomme1
+    cg,ch,cd,cb = canvas.coords(serp[0])
+    if cg<0:
         close()
-    elif canvas.coords(serp[0])[0]<0:
+    elif ch<0:
         close()
-    elif canvas.coords(serp[0])[1]<0:
+    elif cd>nc*tc :
         close()
-    elif canvas.coords(serp[0])[3]>nc*tc:
+    elif cb>nc*tc:
         close()
+# déplacement de la tête + des corps
     else :
         for k in range(0,len(dx)):
             canvas.move(serp[k],dx[k],dy[k])
+# chaque corps prend le la direction de celui avant lui
         for k in range(len(dx)-1,0,-1):
             dx[k] = dx[k-1]
             dy[k] = dy[k-1]
+# si le serpent est autant grand que le canvas le joueur a gagné
+        if len(serp) == 144 :
+                victoire()
         collision()
+# si une pomme apparaît sur le corps du serpent, on en créer une nouvelle
+        for p in range(len(dx)-1,0,-1):
+            if canvas.coords(serp[p]) == canvas.coords(pomme1):
+                canvas.delete(pomme1)
+                pomme1 = créer_pomme()
+# si la tête touche le corps du serpent, le jeu se termine 
         for i in range(len(dx)-1,0,-1):
             if canvas.coords(serp[0]) == canvas.coords(serp[i]):
                 close()
         tk.after(speed,deplacement)
 
+
+
+
 #coordonnés possibles de la pomme
-cp = [0,50,100,150,200,250,300,350,400,450,500,550]
+cp = range(0,tc*nc-tc,tc)
+
 
 #création de la pomme sans la faire apparaître
 def créer_pomme():
     x = random.choice(cp)
     y = random.choice(cp)
-    p = canvas.create_rectangle(x,y,x+50,y+50,fill='red')
+    p = canvas.create_rectangle(x,y,x+tc,y+tc,fill='red')
     return(p)
+
 
 pomme1 = créer_pomme()
 
+
+
 # collision de la pomme et du serpent
-# apparition d'une nouvelle pomme
-# si la pomme apparait sur le corps du serpent, on en créer une nouvelle
 def collision():
     global pomme1
     global score
     c1,c2,c3,c4 = canvas.coords(serp[-1])
-    for p in range(len(dx)-1,0,-1):
-        if canvas.coords(serp[p]) == canvas.coords(pomme1):
-                canvas.delete(pomme1)
-                pomme1 = créer_pomme()
-        elif canvas.coords(serp[0]) == canvas.coords(pomme1):
+    if canvas.coords(serp[0]) == canvas.coords(pomme1):
+# supression de la pomme, apparition d'une nouvelle pomme et le score augmente de 1
             canvas.delete(pomme1)
             pomme1 = créer_pomme()
-            score = score + 1
             serp.append(canvas.create_rectangle(c1-dx[-1],c2-dy[-1],c3-dx[-1],c4-dy[-1],fill="green"))
             dx.append(dx[-1])
             dy.append(dy[-1])
-            if len(serp)-1 == 144:
-                victoire()
+            score = score + 1
+
+# si la pomme apparait sur le corps du serpent, on en créer une nouvelle
+
             
 
 # actions des flèches directionelles         
@@ -136,7 +153,7 @@ def victoire():
     canvas.delete(ALL)
     canvas.create_text(canvas.winfo_width()/2,
                        canvas.winfo_height()/2,
-                       font=('consolas', 40),
+                       font=('consolas', 35),
                        text="BRAVO TU AS GAGNÉ,E !", fill="red")
     canvas.create_text(canvas.winfo_width()/2,
                        canvas.winfo_height()/1.5,
