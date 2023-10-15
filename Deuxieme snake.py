@@ -3,35 +3,36 @@ import random
 
 score = 0
 
-# vitesse du serpent
+# vitesse du serpent, le serpent bouge toute les speed mili secondes
 speed=300
 
-#taille d'un carré
+# taille d'un carré
 tc = 50
 
-#vitesse d'un carré
+# pixel parcouru par tick
 v = 50
 
-#nombre de carrés
+# nombre de carrés sur un axe
 nc = 12
 
-# liste des directions de chaque carrés
+# liste des directions de chaque carrés, dx = direction horizontal, dy = direction vertical
 dx = [v,v,v]
 dy = [0,0,0]
 
 
-#taille du canvas etc
+# taille du canvas et largeur de la bordure 
 tk = Tk()
 canvas = Canvas(tk,width = nc*tc, height = nc*tc , bd=0, bg="darkblue")
 canvas.pack(padx=10,pady=10)
 
 
-#position de la tête au début
+
+# position de la tête au début
 Pos_X=5*tc
 Pos_Y=9*tc
 
 
-#liste des rectangle du serpent
+# liste des rectangle du serpent
 serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+tc,Pos_Y+tc,fill='darkgreen'),
         canvas.create_rectangle(Pos_X-tc,Pos_Y,Pos_X,Pos_Y+tc,fill='green'),
         canvas.create_rectangle(Pos_X-2*tc,Pos_Y,Pos_X-tc,Pos_Y+tc,fill='green')]
@@ -61,7 +62,7 @@ def deplacement():
             dx[k] = dx[k-1]
             dy[k] = dy[k-1]
 # si le serpent est autant grand que le canvas le joueur a gagné
-        if len(serp) == 144 :
+        if len(serp) == nc*nc :
                 victoire()
         collision()
 # si une pomme apparaît sur le corps du serpent, on en créer une nouvelle
@@ -107,9 +108,6 @@ def collision():
             dx.append(dx[-1])
             dy.append(dy[-1])
             score = score + 1
-
-# si la pomme apparait sur le corps du serpent, on en créer une nouvelle
-
             
 
 # actions des flèches directionelles         
