@@ -9,7 +9,7 @@ speed=300
 # taille d'un carré
 tc = 50
 
-# pixel parcouru par tick
+# pixel parcouru par 
 v = 50
 
 # nombre de carrés sur un axe
@@ -20,9 +20,10 @@ dx = [v,v,v]
 dy = [0,0,0]
 
 
-# taille du canvas et largeur de la bordure 
+# taille du canvas,et couleur du fond
 tk = Tk()
-canvas = Canvas(tk,width = nc*tc, height = nc*tc , bd=0, bg="darkblue")
+canvas = Canvas(tk,width = nc*tc, height = nc*tc, bg="darkblue")
+# largeur de la bordure
 canvas.pack(padx=10,pady=10)
 
 
@@ -32,7 +33,7 @@ Pos_X=5*tc
 Pos_Y=9*tc
 
 
-# liste des rectangle du serpent
+# liste des rectangles du serpent
 serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+tc,Pos_Y+tc,fill='darkgreen'),
         canvas.create_rectangle(Pos_X-tc,Pos_Y,Pos_X,Pos_Y+tc,fill='green'),
         canvas.create_rectangle(Pos_X-2*tc,Pos_Y,Pos_X-tc,Pos_Y+tc,fill='green')]
@@ -42,28 +43,22 @@ serp = [canvas.create_rectangle(Pos_X,Pos_Y,Pos_X+tc,Pos_Y+tc,fill='darkgreen'),
 # détections si la tête touche le bord du canvas
 # cg,ch,cd,cb = côté gauche, côté du haut, côté droite, côté du bas
 def deplacement():
-    global dx,dy
-    global pomme1
+    global dx,dy,pomme1
     cg,ch,cd,cb = canvas.coords(serp[0])
-    if cg<0:
-        close()
-    elif ch<0:
-        close()
-    elif cd>nc*tc :
-        close()
-    elif cb>nc*tc:
+    if cg < 0 or ch < 0 or cd > nc*tc or cb > nc*tc :
         close()
 # déplacement de la tête + des corps
     else :
         for k in range(0,len(dx)):
             canvas.move(serp[k],dx[k],dy[k])
 # chaque corps prend le la direction de celui avant lui
-        for k in range(len(dx)-1,0,-1):
-            dx[k] = dx[k-1]
-            dy[k] = dy[k-1]
-# si le serpent est autant grand que le canvas le joueur a gagné
+        for d in range(len(dx)-1,0,-1):
+            dx[d] = dx[d-1]
+            dy[d] = dy[d-1]
+# si le serpent est autant grand que le canvas, le joueur a gagné
         if len(serp) == nc*nc :
                 victoire()
+# on apelle la fonction collision car la tête change de position constamment
         collision()
 # si une pomme apparaît sur le corps du serpent, on en créer une nouvelle
         for p in range(len(dx)-1,0,-1):
@@ -79,20 +74,20 @@ def deplacement():
 
 
 
-#coordonnés possibles de la pomme
-cp = range(0,tc*nc-tc,tc)
+# coordonnés possibles de la pomme
+# cp =[0,50,100,150,200,250,300,350,400,450,500,550]
+cp = range(0,tc*nc,tc)
 
 
-#création de la pomme sans la faire apparaître
+# propriétés de chaque pomme
 def créer_pomme():
     x = random.choice(cp)
     y = random.choice(cp)
     p = canvas.create_rectangle(x,y,x+tc,y+tc,fill='red')
     return(p)
 
-
+# première pomme avec pomme1 comme identifiant
 pomme1 = créer_pomme()
-
 
 
 # collision de la pomme et du serpent
@@ -110,30 +105,30 @@ def collision():
             score = score + 1
             
 
-# actions des flèches directionelles         
+# actions des flèches directionelles
+# mouvement a droite
 def droite(event):
     global dx,dy
     dx[0]=v
     dy[0]=0
-#mouvement a droite
+# mouvement a gauche
 def gauche(event):
     global dx,dy
     dx[0]=-v
     dy[0]=0
-#mouvement a gauche
+# mouvement en haut
 def haut(event):
     global dx,dy
     dx[0]=0
     dy[0]=-v
-#mouvement en haut
+# mouvement en bas
 def bas(event):
     global dx,dy
     dx[0]=0
     dy[0]=v
-#mouvement en bas
 
 
-# ce qu'il se passe quand la tête touche le bord
+# ce qu'il se passe quand le joueur touche un bord de la fenêtre ou le corps du serpent
 def close():
     canvas.delete(ALL)
     canvas.create_text(canvas.winfo_width()/2,
@@ -160,7 +155,7 @@ def victoire():
 
 
                        
-#binding des flèches du clavier
+# binding des flèches du clavier
 canvas.bind_all('<Right>', droite)
 canvas.bind_all('<Left>', gauche)
 canvas.bind_all('<Up>', haut)
@@ -168,6 +163,7 @@ canvas.bind_all('<Down>', bas)
 
 deplacement()
 
+# boucle infinie
 tk.mainloop()
 
 
